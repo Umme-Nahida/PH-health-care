@@ -27,6 +27,8 @@ const testimonials = [
   },
 ];
 
+
+
 const Testimonials = () => {
   return (
     <section className="bg-card py-24">
