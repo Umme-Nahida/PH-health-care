@@ -10,6 +10,7 @@ const PublicNavbar = () => {
     { href: "#", label: "Medicine" },
     { href: "#", label: "Diagnostics" },
     { href: "#", label: "NGOs" },
+    { href: "/dashboard", label: "Dashboard" },
   ];
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur  dark:bg-background/95">
