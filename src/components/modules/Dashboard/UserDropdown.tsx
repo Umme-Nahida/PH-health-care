@@ -20,9 +20,13 @@ interface UserDropdownProps {
 }
 
 const UserDropdown = ({ userInfo }: UserDropdownProps) => {
+
+  
   const handleLogout = async () => {
     await logOut();
   };
+
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
