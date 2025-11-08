@@ -21,7 +21,7 @@ interface UserDropdownProps {
 
 const UserDropdown = ({ userInfo }: UserDropdownProps) => {
 
-  
+
   const handleLogout = async () => {
     await logOut();
   };
@@ -56,7 +56,7 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
         <DropdownMenuItem asChild>
           <Link href={"/change-password"} className="cursor-pointer">
             <Settings className="mr-2 h-4 w-4" />
-            Change Password
+            settings 
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
