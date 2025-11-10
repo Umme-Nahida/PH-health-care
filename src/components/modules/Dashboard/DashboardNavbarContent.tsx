@@ -43,7 +43,7 @@ const DashboardNavbarContent = ({userInfo}:IDashboardNavbarContentProps) => {
            {/* Notifications  */}
           <Button variant="outline" size="icon" className="relative">
             <Bell className="h-5 w-5" />
-            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
+            <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-600" />
           </Button>
 
           {/* User Dropdown */}
