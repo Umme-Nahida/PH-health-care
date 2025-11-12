@@ -5,6 +5,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { loginUser } from "@/services/auth/loginUser";
+
+
+
 const LoginForm = () => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
 
@@ -28,7 +31,7 @@ const LoginForm = () => {
               id="email"
               name="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="youremail@example.com"
               //   required
             />
 
