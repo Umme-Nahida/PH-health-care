@@ -3,6 +3,7 @@
 
 import z from "zod";
 import cookie, { parse } from "cookie";
+import { cookies } from "next/headers";
 
 const loginValidationZodSchema = z.object({
     email: z.email({
@@ -74,9 +75,34 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
                 }
 
             })
+        }else{
+            throw new Error("No cookies set in response");
+        }
+
+        if(!accessTokenObject || !refreshTokenObject){
+            throw new Error("Tokens not found in cookies");
         }
         
-        console.log("set-cookie",setHeaderCookie);
+
+        let cookieStores = await cookies();
+
+        cookieStores.set('accessToken', accessTokenObject['accessToken'], {
+            secure: true, 
+            httpOnly: true,
+            maxAge: parseInt(accessTokenObject['Max-Age']) || 3600,
+            path: accessTokenObject['Path'] || '/'
+        })
+        
+        cookieStores.set('refreshToken', refreshTokenObject['refreshToken'], {
+            secure: true, 
+            httpOnly: true,
+            maxAge: parseInt(refreshTokenObject['Max-Age']) || 604800,
+            path: refreshTokenObject['Path'] || '/'
+        })
+
+
+
+        console.log("cookie",accessTokenObject, refreshTokenObject);
         // console.log("set-cookie",setHeaderCookie);
         console.log({
             res,
