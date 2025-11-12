@@ -17,6 +17,9 @@ const loginValidationZodSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: any): Promise<any> => {
     try {
+
+        let accessTokenObject = null;
+        let refreshTokenObject = null;
         const loginData = {
             email: formData.get('email'),
             password: formData.get('password'),
@@ -54,6 +57,21 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
                 console.log("string cookie:", cookie)
                 const parseCookies = parse(cookie);
                 console.log("parseCookies",parseCookies)
+
+                if (parseCookies['accessToken']) {
+                    // accessTokenObject = {
+                    //     token: parseCookies['accessToken'],
+                    //     expires: parseCookies['accessTokenExpires'],
+                    // }
+                    accessTokenObject = parseCookies;
+                }
+             if (parseCookies['refreshToken']) {
+                    // refreshTokenObject = {
+                    //     token: parseCookies['refreshToken'],
+                    //     expires: parseCookies['refreshTokenExpires'],
+                    // }
+                    refreshTokenObject = parseCookies;
+                }
 
             })
         }
