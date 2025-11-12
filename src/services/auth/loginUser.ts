@@ -41,10 +41,22 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             headers: {
                 "Content-Type": "application/json",
             },
-        }).then(res => res.json());
+        })
+
+        const result = await res.json()
 
 
-        return res;
+        const setHeaderCookie = res.headers.get("set-cookie");
+        
+        console.log("set-cookie",setHeaderCookie?.split(",")[0]);
+        console.log("set-cookie",setHeaderCookie?.split(","));
+        console.log({
+            res,
+            result
+        })
+
+
+        return result;
 
     } catch (error) {
         console.log(error);
