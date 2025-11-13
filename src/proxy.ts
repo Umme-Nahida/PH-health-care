@@ -64,6 +64,43 @@
 ///////////////////-------------------next auth middleware example-----------------///////////////////////////
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
+
+
+// user role base access control added here
+type UserRole = 'ADMIN' | 'DOCTOR' | 'PATIENT' | 'GUEST';
+
+type RouteConfig = {
+   exact: string[];
+   pattern: RegExp[];
+}
+
+
+const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
+
+const commonProtectedRoutes: RouteConfig = {
+    exact: ["/my-profile", "/settings"],
+    pattern: []
+}
+
+const adminProtectedRoutes: RouteConfig = {
+    pattern: [/^\/admin/], // matches /admin and any sub routes /admin/*
+    exact: []
+}
+
+
+const doctorProtectedRoutes: RouteConfig = {
+    pattern: [/^\/doctor/], // matches /doctor and any sub routes /doctor/*
+    exact: []
+}
+
+
+const patientProtectedRoutes: RouteConfig = {
+    pattern: [/^\/dashboard/], // matches /dashboard and any sub routes /dashboard/*
+    exact: []
+}
+
+
+
  
 // This function can be marked `async` if using `await` inside
 export function proxy(request: NextRequest) {
