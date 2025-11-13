@@ -89,14 +89,16 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
         cookieStores.set('accessToken', accessTokenObject['accessToken'], {
             secure: true, 
             httpOnly: true,
-            maxAge: parseInt(accessTokenObject['Max-Age']) || 3600,
+            maxAge: parseInt(accessTokenObject['Max-Age']) || 1000 * 60 * 60,
+            sameSite: accessTokenObject['SameSite'] as 'lax' | 'strict' | 'none' || 'none',
             path: accessTokenObject['Path'] || '/'
         })
         
         cookieStores.set('refreshToken', refreshTokenObject['refreshToken'], {
             secure: true, 
             httpOnly: true,
-            maxAge: parseInt(refreshTokenObject['Max-Age']) || 604800,
+            maxAge: parseInt(refreshTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 90,
+            sameSite: accessTokenObject['SameSite'] as 'lax' | 'strict' | 'none' || 'none',
             path: refreshTokenObject['Path'] || '/'
         })
 
