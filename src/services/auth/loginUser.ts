@@ -2,8 +2,11 @@
 "use server"
 
 import z from "zod";
-import cookie, { parse } from "cookie";
+import { parse } from "cookie";
 import { cookies } from "next/headers";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { redirect } from "next/navigation";
+import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
 
 const loginValidationZodSchema = z.object({
     email: z.email({
@@ -18,6 +21,8 @@ const loginValidationZodSchema = z.object({
 
 export const loginUser = async (_currentState: any, formData: any): Promise<any> => {
     try {
+
+        const redirectTo = formData.get('redirect') || null;
 
         let accessTokenObject = null;
         let refreshTokenObject = null;
@@ -53,11 +58,10 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         const setHeaderCookie = res.headers.getSetCookie();
 
-        if(setHeaderCookie){
+        if (setHeaderCookie) {
             setHeaderCookie.forEach((cookie: string) => {
-                console.log("string cookie:", cookie)
                 const parseCookies = parse(cookie);
-                console.log("parseCookies",parseCookies)
+                // console.log("parseCookies",parseCookies)
 
                 if (parseCookies['accessToken']) {
                     // accessTokenObject = {
@@ -66,7 +70,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
                     // }
                     accessTokenObject = parseCookies;
                 }
-             if (parseCookies['refreshToken']) {
+                if (parseCookies['refreshToken']) {
                     // refreshTokenObject = {
                     //     token: parseCookies['refreshToken'],
                     //     expires: parseCookies['refreshTokenExpires'],
@@ -75,47 +79,59 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
                 }
 
             })
-        }else{
+        } else {
             throw new Error("No cookies set in response");
         }
 
-        if(!accessTokenObject || !refreshTokenObject){
+        if (!accessTokenObject || !refreshTokenObject) {
             throw new Error("Tokens not found in cookies");
         }
-        
+
 
         let cookieStores = await cookies();
 
         cookieStores.set('accessToken', accessTokenObject['accessToken'], {
-            secure: true, 
+            secure: true,
             httpOnly: true,
             maxAge: parseInt(accessTokenObject['Max-Age']) || 1000 * 60 * 60,
             sameSite: accessTokenObject['SameSite'] as 'lax' | 'strict' | 'none' || 'none',
             path: accessTokenObject['Path'] || '/'
         })
-        
+
         cookieStores.set('refreshToken', refreshTokenObject['refreshToken'], {
-            secure: true, 
+            secure: true,
             httpOnly: true,
             maxAge: parseInt(refreshTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 90,
             sameSite: accessTokenObject['SameSite'] as 'lax' | 'strict' | 'none' || 'none',
             path: refreshTokenObject['Path'] || '/'
         })
 
+        const verifiedToken: JwtPayload | string = jwt.verify(accessTokenObject['accessToken'], process.env.JWT_SECRET as string);
 
+        if (typeof verifiedToken === 'string') {
+            throw new Error("Invalid token");
+        }
 
-        console.log("cookie",accessTokenObject, refreshTokenObject);
-        // console.log("set-cookie",setHeaderCookie);
-        console.log({
-            res,
-            result
-        })
+        const userRole: UserRole = verifiedToken.role;
 
-
-        return result;
+     if (redirectTo) {
+            const requestedPath = redirectTo.toString();
+            if (isValidRedirectForRole(requestedPath, userRole)) {
+                redirect(requestedPath);
+            } else {
+                redirect(getDefaultDashboardRoute(userRole));
+            }
+        }
 
     } catch (error) {
+        // Re-throw NEXT_REDIRECT errors so Next.js can handle them
+        // ensure digest exists and is a string before calling startsWith
+        const digest = (error as any)?.digest;
+        if (typeof digest === 'string' && digest.startsWith('NEXT_REDIRECT')) {
+            throw error;
+        }
         console.log(error);
+    
         return { error: "Login failed" };
     }
 }
