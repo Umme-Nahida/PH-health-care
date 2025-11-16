@@ -121,6 +121,8 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             } else {
                 redirect(getDefaultDashboardRoute(userRole));
             }
+        }else{
+            redirect(getDefaultDashboardRoute(userRole));
         }
 
     } catch (error) {
