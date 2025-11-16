@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { loginUser } from "@/services/auth/loginUser";
+import { toast } from "sonner";
 
 
 
@@ -20,6 +21,14 @@ const LoginForm = ({redirect}: {redirect: string}) => {
     }
   };
   console.log("state" , state);
+
+ useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
+
+  
   return (
     <form action={formAction}>
       <input type="hidden" name="redirect" value={redirect} />
