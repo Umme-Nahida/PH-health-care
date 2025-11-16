@@ -7,20 +7,22 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
 import { registerPatient } from "@/services/auth/registerPatient";
+import { toast } from "sonner";
 
 const RegisterForm = () => {
   // Provide a concrete tuple type so `state.errors` is not typed as `never`.
-  const [state, formAction, isPending] = useActionState(registerPatient, null) as [
-    { errors?: { field: string; message: string }[] } | null,
-    unknown,
-    boolean
-  ];
+  const [state, formAction, isPending] = useActionState(registerPatient, null) ;
   console.log(state, "state"); 
+
+  if(state?.success){
+     toast.success(state?.message || "Registration successful!");
+  }
 
   const getFieldError = (fieldName: string) => {
     if (state && Array.isArray(state.errors)) {
-      const error = state.errors.find((err) => err.field === fieldName);
+      const error = state.errors.find((err:any) => err.field === fieldName);
       if (error) {
+        toast.error(error.message)
         return error.message;
       } else {
         return null;
@@ -30,7 +32,7 @@ const RegisterForm = () => {
     }
   };
   return (
-    <form >
+    <form action={formAction}>
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Name */}
