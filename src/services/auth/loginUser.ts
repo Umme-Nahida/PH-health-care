@@ -3,10 +3,10 @@
 
 import z from "zod";
 import { parse } from "cookie";
-import { cookies } from "next/headers";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
+import { setCookie } from "./tokenHandler";
 
 const loginValidationZodSchema = z.object({
     email: z.email({
@@ -88,9 +88,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
         }
 
 
-        let cookieStores = await cookies();
-
-        cookieStores.set('accessToken', accessTokenObject['accessToken'], {
+       await setCookie('accessToken', accessTokenObject['accessToken'], {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(accessTokenObject['Max-Age']) || 1000 * 60 * 60,
@@ -98,7 +96,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             path: accessTokenObject['Path'] || '/'
         })
 
-        cookieStores.set('refreshToken', refreshTokenObject['refreshToken'], {
+       await setCookie('refreshToken', refreshTokenObject['refreshToken'], {
             secure: true,
             httpOnly: true,
             maxAge: parseInt(refreshTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 90,
