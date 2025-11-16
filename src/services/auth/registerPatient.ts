@@ -3,6 +3,7 @@
 
 import z from "zod";
 import { loginUser } from "./loginUser";
+import { toast } from "sonner";
 
 const registerValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -35,7 +36,7 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
 
         const validatedFields = registerValidationZodSchema.safeParse(validationData);
 
-        console.log("val",validatedFields);
+        console.log("validated_Fields",validatedFields);
 
         if (!validatedFields.success) {
             return {
@@ -60,28 +61,36 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         }
 
         const newFormData = new FormData();
+        // console.log("form data:", formData)
 
         newFormData.append("data", JSON.stringify(registerData));
+        console.log("append formData:", newFormData)
 
-        const res = await fetch("http://localhost:5000/api/v1/user/create-patient", {
+        const res = await fetch("http://localhost:5000/api/v1/users", {
             method: "POST",
             body: newFormData,
         })
 
 
         const result = await res.json();
+
+        // console.log("result", result);
+
         if (result.success) {
-            await loginUser(_currentState, formData);
+            return await loginUser(_currentState, formData);
         }
 
-        console.log("result", result);
-
+        
         return result;
 
 
+    } catch (error: any) {
+        // IMPORTANT ⬇️
+        if (typeof error?.digest === "string" && error.digest.startsWith("NEXT_REDIRECT")) {
+          throw error;
+        }
 
-    } catch (error) {
-        console.log(error);
+        console.error("register Error:", error);
         return { error: "Registration failed" };
     }
 }
