@@ -9,7 +9,7 @@ import React from "react"
             <PublicNavbar/>
             {children}
             <PublicFooter/>
-            <Toaster position="top-right" richColors />
+            <Toaster position="top-center" richColors />
         </div>
     )
 }
