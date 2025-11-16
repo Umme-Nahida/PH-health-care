@@ -67,6 +67,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken'
 import { cookies } from 'next/headers';
 import { get } from 'http';
 import { getDefaultDashboardRoute, getRouteOwnerRole, isAuthRoute, UserRole } from './lib/auth-utils';
+import { deleteCookie } from './services/auth/tokenHandler';
 
 
 
@@ -84,8 +85,8 @@ export async function proxy(request: NextRequest) {
         const verifiedToken: JwtPayload | string = jwt.verify(accessToken, process.env.JWT_SECRET as string);
 
         if (typeof verifiedToken === 'string') {
-            cookiesStore.delete('accessToken');
-            cookiesStore.delete('refreshToken');
+            deleteCookie('accessToken');
+            deleteCookie('refreshToken');
             return NextResponse.redirect(new URL(`/login`, request.url))
         }
 

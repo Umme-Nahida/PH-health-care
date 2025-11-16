@@ -2,8 +2,11 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Menu } from "lucide-react";
+import { getCookie } from "@/services/auth/tokenHandler";
+import LogoutButton from "./LogoutButton";
+import { cookies } from "next/headers";
 
-const PublicNavbar = () => {
+const PublicNavbar = async () => {
   const navItems = [
     { href: "#", label: "Consultation" },
     { href: "#", label: "Health Plans" },
@@ -12,6 +15,10 @@ const PublicNavbar = () => {
     { href: "#", label: "NGOs" },
     { href: "/dashboard", label: "Dashboard" },
   ];
+
+  const cookiesStore = await cookies();
+  const accessToken = await cookiesStore.get('accessToken')?.value;
+  console.log("hey I am hear from navbar to cookie", accessToken)
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur  dark:bg-background/95">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -32,9 +39,14 @@ const PublicNavbar = () => {
         </nav>
 
         <div className="hidden md:flex items-center space-x-2">
-          <Link href="/login" className="text-lg font-medium">
-            <Button>Login</Button>
-          </Link>
+
+          {
+            accessToken ? (<LogoutButton></LogoutButton>) : (
+              <Link href="/login" className="text-lg font-medium">
+                <Button>Login</Button>
+              </Link>
+            )
+          }
         </div>
 
         {/* Mobile Menu */}
@@ -42,7 +54,7 @@ const PublicNavbar = () => {
         <div className="md:hidden">
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline"> <Menu/> </Button>
+              <Button variant="outline"> <Menu /> </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px] p-4">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
