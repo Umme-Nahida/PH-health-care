@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { Menu } from "lucide-react";
-import { getCookie } from "@/services/auth/tokenHandler";
 import LogoutButton from "./LogoutButton";
 import { cookies } from "next/headers";
+import { getCookie } from "@/services/auth/tokenHandler";
 
 const PublicNavbar = async () => {
   const navItems = [
@@ -16,8 +16,8 @@ const PublicNavbar = async () => {
     { href: "/dashboard", label: "Dashboard" },
   ];
 
-  const cookiesStore = await cookies();
-  const accessToken = await cookiesStore.get('accessToken')?.value;
+ 
+  const accessToken = await getCookie('accessToken');
   console.log("hey I am hear from navbar to cookie", accessToken)
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur  dark:bg-background/95">
@@ -45,6 +45,7 @@ const PublicNavbar = async () => {
               <Link href="/login" className="text-lg font-medium">
                 <Button>Login</Button>
               </Link>
+              
             )
           }
         </div>

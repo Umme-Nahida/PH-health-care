@@ -36,8 +36,6 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
 
         const validatedFields = registerValidationZodSchema.safeParse(validationData);
 
-        console.log("validated_Fields",validatedFields);
-
         if (!validatedFields.success) {
             return {
                 success: false,
@@ -61,7 +59,6 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         }
 
         const newFormData = new FormData();
-        // console.log("form data:", formData)
 
         newFormData.append("data", JSON.stringify(registerData));
         console.log("append formData:", newFormData)
@@ -74,7 +71,6 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
 
         const result = await res.json();
 
-        // console.log("result", result);
 
         if (result.success) {
             return await loginUser(_currentState, formData);
@@ -91,6 +87,6 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         }
 
         console.error("register Error:", error);
-        return { error: "Registration failed" };
+        return { success: false, message:`${process.env.NODE_ENV === 'development' ? error : 'Registration failed, please try again later'}`};
     }
 }

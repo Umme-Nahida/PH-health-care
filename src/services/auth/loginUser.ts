@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server"
 
-import z from "zod";
+import z, { success } from "zod";
 import { parse } from "cookie";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
@@ -112,26 +112,37 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         const userRole: UserRole = verifiedToken.role;
 
-     if (redirectTo) {
+    //  if (redirectTo) {
+    //         const requestedPath = redirectTo.toString();
+    //         if (isValidRedirectForRole(requestedPath, userRole)) {
+    //             redirect(requestedPath);
+    //         } else {
+    //             redirect(getDefaultDashboardRoute(userRole));
+    //         }
+    //     }else{
+    //         redirect(getDefaultDashboardRoute(userRole));
+    //     }
+
+    if (redirectTo) {
             const requestedPath = redirectTo.toString();
             if (isValidRedirectForRole(requestedPath, userRole)) {
-                redirect(requestedPath);
+                redirect(`${requestedPath}?loggedIn=true`);
             } else {
-                redirect(getDefaultDashboardRoute(userRole));
+                redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
             }
-        }else{
-            redirect(getDefaultDashboardRoute(userRole));
+        } else {
+            redirect(`${getDefaultDashboardRoute(userRole)}?loggedIn=true`);
         }
 
-    } catch (error) {
+    } catch (error){
         // Re-throw NEXT_REDIRECT errors so Next.js can handle them
         // ensure digest exists and is a string before calling startsWith
         const digest = (error as any)?.digest;
         if (typeof digest === 'string' && digest.startsWith('NEXT_REDIRECT')) {
             throw error;
         }
-        console.log(error);
+        // console.log("AMI ERROR", error?.message);
     
-        return { error: "Login failed" };
+        return { success: false, message:`${process.env.NODE_ENV === 'development' ? error : 'login failed, you might have entered wrong credentials'}`};
     }
 }
