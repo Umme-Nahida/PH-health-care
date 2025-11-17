@@ -1,24 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-
+import { registerPatient } from "@/services/auth/registerPatient";
 import { useActionState, useEffect } from "react";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
-import { registerPatient } from "@/services/auth/registerPatient";
+import { Input } from "../ui/input";
 import { toast } from "sonner";
 
 const RegisterForm = () => {
-  // Provide a concrete tuple type so `state.errors` is not typed as `never`.
-  const [state, formAction, isPending] = useActionState(registerPatient, null) ;
-  console.log(state, "state"); 
+  const [state, formAction, isPending] = useActionState(registerPatient, null);
 
   const getFieldError = (fieldName: string) => {
-    if (state && Array.isArray(state.errors)) {
-      const error = state.errors.find((err:any) => err.field === fieldName);
+    if (state && state.errors) {
+      const error = state.errors.find((err: any) => err.field === fieldName);
       if (error) {
-        toast.error(error.message)
         return error.message;
       } else {
         return null;
@@ -28,14 +24,11 @@ const RegisterForm = () => {
     }
   };
 
- useEffect(() => {
+  useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
   }, [state]);
-
-  
-  
   return (
     <form action={formAction}>
       <FieldGroup>

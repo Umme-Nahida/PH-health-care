@@ -1,6 +1,7 @@
 import LoginForm from "@/components/Auth/login-form";
 
 
+
 const LoginPage = async({searchParams}: {searchParams: Promise<{redirect: string}>}) => {
 
   const params = await searchParams;

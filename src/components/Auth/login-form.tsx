@@ -1,37 +1,34 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { loginUser } from "@/services/auth/loginUser";
 import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
-import { loginUser } from "@/services/auth/loginUser";
-import { toast } from "sonner";
 
 
-
-const LoginForm = ({redirect}: {redirect: string}) => {
+const LoginForm = ({ redirect }: { redirect?: string }) => {
   const [state, formAction, isPending] = useActionState(loginUser, null);
 
   const getFieldError = (fieldName: string) => {
-    if (state && Array.isArray(state.errors)) {
+    if (state && state.errors) {
       const error = state.errors.find((err: any) => err.field === fieldName);
       return error.message;
     } else {
       return null;
     }
   };
-  console.log("state" , state);
 
- useEffect(() => {
+  useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
   }, [state]);
 
-  
   return (
     <form action={formAction}>
-      <input type="hidden" name="redirect" value={redirect} />
+      {redirect && <input type="hidden" name="redirect" value={redirect} />}
       <FieldGroup>
         <div className="grid grid-cols-1 gap-4">
           {/* Email */}
@@ -41,7 +38,7 @@ const LoginForm = ({redirect}: {redirect: string}) => {
               id="email"
               name="email"
               type="email"
-              placeholder="youremail@example.com"
+              placeholder="m@example.com"
               //   required
             />
 

@@ -112,17 +112,7 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
 
         const userRole: UserRole = verifiedToken.role;
 
-    //  if (redirectTo) {
-    //         const requestedPath = redirectTo.toString();
-    //         if (isValidRedirectForRole(requestedPath, userRole)) {
-    //             redirect(requestedPath);
-    //         } else {
-    //             redirect(getDefaultDashboardRoute(userRole));
-    //         }
-    //     }else{
-    //         redirect(getDefaultDashboardRoute(userRole));
-    //     }
-
+  
     if (redirectTo) {
             const requestedPath = redirectTo.toString();
             if (isValidRedirectForRole(requestedPath, userRole)) {
