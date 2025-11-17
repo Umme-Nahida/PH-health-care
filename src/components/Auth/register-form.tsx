@@ -2,7 +2,7 @@
 "use client";
 
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../ui/field";
@@ -13,10 +13,6 @@ const RegisterForm = () => {
   // Provide a concrete tuple type so `state.errors` is not typed as `never`.
   const [state, formAction, isPending] = useActionState(registerPatient, null) ;
   console.log(state, "state"); 
-
-  if(state?.success){
-     toast.success(state?.message || "Registration successful!");
-  }
 
   const getFieldError = (fieldName: string) => {
     if (state && Array.isArray(state.errors)) {
@@ -31,6 +27,15 @@ const RegisterForm = () => {
       return null;
     }
   };
+
+ useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
+
+  
+  
   return (
     <form action={formAction}>
       <FieldGroup>
