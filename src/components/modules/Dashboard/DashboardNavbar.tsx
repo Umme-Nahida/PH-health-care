@@ -1,7 +1,11 @@
+import DashboardNavbarContent from "./DashboardNavbarContent"
 
 const DashboardNavbar = () => {
   return (
-    <div>DashboardNavbar</div>
+    <div>
+      DashboardNavbar
+      <DashboardNavbarContent />
+    </div>
   )
 }
 
