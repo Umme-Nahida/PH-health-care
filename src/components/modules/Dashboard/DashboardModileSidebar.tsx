@@ -1,13 +1,17 @@
+"use client"
+
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { SheetTitle } from "@/components/ui/sheet";
+import { getIconComponent } from "@/lib/icon-mapper";
 import { cn } from "@/lib/utils";
 import { NavSection } from "@/types/dashboard.interface";
 import { IUserInfo } from "@/types/user.interface"
 import { Bell } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 
 interface IDashboardMobileContentProps {
    userInfo: IUserInfo,
@@ -42,8 +46,8 @@ const DashboardModileSidebar = ({userInfo,navItems,dashboardHome}:IDashboardMobi
               <div className="space-y-1">
                 {section.items.map((item) => {
                   const isActive = pathname === item.href;
-                //   const Icon = getIconComponent(item.icon);
-                  const Icon = <Bell />
+                  const Icon = getIconComponent(item.icon);
+                  // const Icon = <Bell />
 
                   return (
                     <Link
@@ -56,8 +60,7 @@ const DashboardModileSidebar = ({userInfo,navItems,dashboardHome}:IDashboardMobi
                           : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                       )}
                     >
-                      {/* <Icon className="h-4 w-4" /> */}
-                      <Bell className="h-4 w-4" />
+                      <Icon className="h-4 w-4" />
                       <span className="flex-1">{item.title}</span>
                       {item.badge && (
                         <Badge variant={isActive ? "secondary" : "default"}>
