@@ -40,12 +40,9 @@ export const serverFetch ={
             ...options
         });
     },
-    patch: async (endpoint: string, options: RequestInit = {}) => {
-        return serverFetchHelper(endpoint, {
-            method: 'PATCH',
-            ...options
-        });
-    },
+    // patch: async (endpoint: string, options: RequestInit = {}) => {
+    //     return serverFetchHelper(endpoint, { method: 'PATCH',...options});
+    // },
     delete: async (endpoint: string, options: RequestInit = {}) => {
         return serverFetchHelper(endpoint, {
             method: 'DELETE',
