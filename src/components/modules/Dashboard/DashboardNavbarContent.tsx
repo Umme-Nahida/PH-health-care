@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { IUserInfo } from "@/types/user.interface"
@@ -6,6 +8,7 @@ import UserDropdown from "./UserDropdown"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { NavSection } from "@/types/dashboard.interface"
 import DashboardModileSidebar from "./DashboardModileSidebar"
+import { useEffect, useState } from "react"
 
 interface IDashboardNavbarContentProps {
    userInfo: IUserInfo,
@@ -15,11 +18,27 @@ interface IDashboardNavbarContentProps {
 
 const DashboardNavbarContent = ({userInfo,navItems,dashboardHome}:IDashboardNavbarContentProps) => {
   console.log("userInfo:", userInfo)
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIsMobile = ()=>{
+      // Check if the window width is less than a certain breakpoint (e.g., 768px for mobile)
+      setIsMobile(window.innerWidth < 768);
+
+    }
+    checkIsMobile();
+    // Add event listener to handle window resize
+    window.addEventListener('resize', checkIsMobile)
+    // Cleanup event listener on component unmount or memory leak 
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur">
       <div className="flex h-16 items-center justify-between gap-4 px-4 md:px-6">
         {/* Mobile Menu Toggle */}
-        <Sheet>
+        <Sheet open={isMobile && isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="outline" size="icon">
               <Menu className="h-5 w-5" />
