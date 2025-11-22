@@ -4,6 +4,7 @@
 import z from "zod";
 import { loginUser } from "./loginUser";
 import { toast } from "sonner";
+import { serverFetch } from "@/lib/server.fetch";
 
 const registerValidationZodSchema = z.object({
     name: z.string().min(1, { message: "Name is required" }),
@@ -63,8 +64,7 @@ export const registerPatient = async (_currentState: any, formData: any): Promis
         newFormData.append("data", JSON.stringify(registerData));
         console.log("append formData:", newFormData)
 
-        const res = await fetch("http://localhost:5000/api/v1/users", {
-            method: "POST",
+        const res = await serverFetch.post("http://localhost:5000/api/v1/users", {
             body: newFormData,
         })
 
