@@ -15,7 +15,7 @@ interface ManagementPageHeaderProps {
 const ManagementPageHeader = ({title,description,actions,children}:ManagementPageHeaderProps) => {
     const Icon = actions?.icon || Plus;
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-between">
         <div>
             <h1 className="text-2xl font-bold">{title} </h1>
             {description && <p className="text-sm text-muted-foreground">{description}</p>}

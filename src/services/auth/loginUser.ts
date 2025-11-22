@@ -46,12 +46,20 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             }
         }
 
-        const res = await serverFetch.post("http://localhost:5000/api/v1/auth/login", {
+        console.log("login data:", loginData)
+        const res = await serverFetch.post("/auth/login", {
             body: JSON.stringify(loginData),
+            headers: {
+                "Content-Type": "application/json",
+            }
         })
 
         const result = await res.json()
-
+        console.log("ami holar login res:", result)
+        
+        if(!result.success){
+             throw new Error(result.error.message)
+        }
 
         const setHeaderCookie = res.headers.getSetCookie();
 
