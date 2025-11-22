@@ -7,6 +7,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { redirect } from "next/navigation";
 import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/auth-utils";
 import { setCookie } from "./tokenHandler";
+import { serverFetch } from "@/lib/server.fetch";
 
 const loginValidationZodSchema = z.object({
     email: z.email({
@@ -45,12 +46,8 @@ export const loginUser = async (_currentState: any, formData: any): Promise<any>
             }
         }
 
-        const res = await fetch("http://localhost:5000/api/v1/auth/login", {
-            method: "POST",
+        const res = await serverFetch.post("http://localhost:5000/api/v1/auth/login", {
             body: JSON.stringify(loginData),
-            headers: {
-                "Content-Type": "application/json",
-            },
         })
 
         const result = await res.json()
