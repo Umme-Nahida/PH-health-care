@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { Button } from "../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -24,9 +25,21 @@ const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
     });
   };
 
-  if (totalPages <= 1) {
-    return null;
+  const changeLimit =(newLimit: string)=>{
+     const params = new URLSearchParams(searchParams.toString())
+     params.set("limit",newLimit)
+     params.set("page","1")
+
+     startTransition(()=>{
+        router.push(`?${params.toString()}`)
+     })
   }
+
+  const currentLimit = searchParams.get("limit") || "10";
+
+  // if (totalPages <= 1) {
+  //   return null;
+  // }
 
   return (
     <div className="flex items-center justify-center gap-2">
@@ -82,6 +95,29 @@ const TablePagination = ({ currentPage, totalPages }: TablePaginationProps) => {
         {/* Page 9 of 20 */}
         Page {currentPage} of {totalPages}
       </span>
+
+
+       {/* Items per page selector */}
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">Items per page:</span>
+        <Select
+          value={currentLimit}
+          onValueChange={changeLimit}
+          disabled={isPending}
+        >
+          <SelectTrigger className="w-[70px] h-8">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="1">1</SelectItem>
+            <SelectItem value="5">5</SelectItem>
+            <SelectItem value="10">10</SelectItem>
+            <SelectItem value="20">20</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 };
