@@ -17,6 +17,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
         photo={typeof doctor.profilePhoto === 'string' ? doctor.profilePhoto : undefined}
       />
     ),
+    sortKey:"name"
   },
   {
     header: "Specialties",
@@ -52,6 +53,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
         {doctor.experience ?? 0} years
       </span>
     ),
+    sortKey:"experience"
   },
   {
     header: "Fee",
@@ -60,6 +62,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
         ${doctor.appointmentFee}
       </span>
     ),
+    sortKey:"appointmentFee"
   },
   {
     header: "Rating",
@@ -71,6 +74,7 @@ export const doctorsColumns: Column<IDoctor>[] = [
         </span>
       </div>
     ),
+    sortKey:"averageRating"
   },
   {
     header: "Gender",
@@ -85,5 +89,6 @@ export const doctorsColumns: Column<IDoctor>[] = [
   {
     header: "Joined",
     accessor: (doctor) => <DateCell date={doctor.createdAt} />,
+    sortKey:"createdAt"
   },
 ];
