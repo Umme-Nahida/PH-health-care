@@ -10,7 +10,7 @@ const DashboardNavbar = async() => {
      const userInfo = (await getUserInfo()) as IUserInfo
   
   
-     const navItems: NavSection[] = getNavItemsByRole(userInfo.role);
+    const navItems: NavSection[] = getNavItemsByRole(userInfo.role);
     const dashboardHome = getDefaultDashboardRoute(userInfo.role);
 
   return (
